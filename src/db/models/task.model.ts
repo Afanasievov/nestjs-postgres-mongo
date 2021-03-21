@@ -1,8 +1,8 @@
 import { Table, Model, Column, PrimaryKey } from 'sequelize-typescript';
-import { TaskStatus } from './task.model';
+import { TaskStatus } from 'src/tasks/task-status.enum';
 
 @Table
-export class TaskDB extends Model<TaskDB> {
+export class Task extends Model<Task> {
   @PrimaryKey
   @Column
   id: string;

@@ -5,6 +5,7 @@ module.exports = {
   username: 'postgres',
   password: 'postgres',
   database: 'task-management',
-  models: [],
+  models: [__dirname + '/**/*.model.ts'],
   autoLoadModels: true,
+  repositoryMode: true,
 };
