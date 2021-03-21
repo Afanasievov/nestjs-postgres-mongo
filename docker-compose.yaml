@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  db-postgres:
+    container_name: nestjs-task-management-postgres
+    image: postgres:13-alpine
+    volumes:
+      - ./.docker/postgres:/var/lib/postgresql/data
+    environment:
+      TZ: Etc/Utc
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: task-management
+    ports:
+      - 5432:5432
