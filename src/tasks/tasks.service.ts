@@ -4,7 +4,6 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Op } from 'sequelize';
 import { Task } from 'src/db/models/task.model';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
@@ -15,28 +14,7 @@ export class TasksService {
   constructor(@InjectModel(Task) private readonly taskModel: typeof Task) {}
 
   async getTasks(filterDto: GetTasksFilterDto): Promise<Task[]> {
-    const { status, search } = filterDto;
-    const where: {
-      [Op.or]: [
-        { status?: TaskStatus },
-        {
-          [Op.or]?: [
-            { title: { [Op.substring]: string } },
-            { description: { [Op.substring]: string } },
-          ];
-        },
-      ];
-    } = { [Op.or]: [{}, {}] };
-    if (status) {
-      where[Op.or][0] = { status };
-    }
-    if (search) {
-      where[Op.or][1][Op.or] = [
-        { title: { [Op.substring]: search } },
-        { description: { [Op.substring]: search } },
-      ];
-    }
-    return this.taskModel.findAll({ where });
+    return this.taskModel.findAllWithFilters(filterDto);
   }
 
   async getTaskById(id: string): Promise<Task> {
