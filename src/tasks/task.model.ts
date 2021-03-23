@@ -1,7 +1,7 @@
 import { Op, FindOptions, WhereOptions } from 'sequelize';
 import { Table, Model, Column, DataType } from 'sequelize-typescript';
-import { TaskStatus } from 'src/tasks/task-status.enum';
-import { GetTasksFilterDto } from 'src/tasks/dto/get-tasks-filter.dto';
+import { TaskStatus } from './task-status.enum';
+import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 
 @Table({ timestamps: false })
 export class Task extends Model {
