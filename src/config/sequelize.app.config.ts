@@ -7,7 +7,7 @@ export const sequelizeConfig: SequelizeModuleOptions = {
   username: 'postgres',
   password: 'postgres',
   database: 'task-management',
-  models: ['../**/*.model.ts'],
+  models: ['/src/**/*.model.ts'],
   autoLoadModels: true,
   synchronize: false,
 };
