@@ -21,7 +21,9 @@ export class Task extends Model {
   @Column
   status: TaskStatus;
 
-  static findAllWithFilters(filterDto: GetTasksFilterDto): Promise<Task[]> {
+  static async findAllWithFilters(
+    filterDto: GetTasksFilterDto,
+  ): Promise<Task[]> {
     const { status, search } = filterDto;
     const where: WhereOptions = { [Op.or]: [] };
     if (status) {
