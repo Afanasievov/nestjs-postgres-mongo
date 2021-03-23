@@ -2,7 +2,7 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) =>
-    queryInterface.createTable('Task', {
+    queryInterface.createTable('Tasks', {
       id: {
         primaryKey: true,
         allowNull: false,
@@ -15,8 +15,9 @@ module.exports = {
         type: Sequelize.ENUM,
         values: ['OPEN', 'IN_PROGRESS', 'DONE'],
         defaultValue: 'OPEN',
+        notNull: true,
       },
     }),
 
-  down: async (queryInterface) => queryInterface.dropTable('Task'),
+  down: async (queryInterface) => queryInterface.dropTable('Tasks'),
 };
