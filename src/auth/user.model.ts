@@ -1,4 +1,3 @@
-import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 import { Model } from 'sequelize';
 import {
   AllowNull,
@@ -8,9 +7,12 @@ import {
   Table,
   Unique,
 } from 'sequelize-typescript';
-import { BadRequestException } from '@nestjs/common';
-
-const alreadyExists = 'username already exists';
+import {
+  BadRequestException,
+  InternalServerErrorException,
+} from '@nestjs/common';
+import { alreadyExists } from '../constants/error-codes';
+import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 
 @Table
 export class User extends Model {
@@ -21,7 +23,7 @@ export class User extends Model {
   })
   id: string;
 
-  @Unique({ name: 'username', msg: alreadyExists })
+  @Unique({ name: 'username', msg: 'username already exists' })
   @Length({ min: 4, max: 20 })
   @AllowNull(false)
   @Column
@@ -36,10 +38,10 @@ export class User extends Model {
     try {
       await this.create(authCredentialsDto);
     } catch (error) {
-      if (error.message === alreadyExists) {
-        throw new BadRequestException(alreadyExists);
+      if (error?.parent?.code === alreadyExists) {
+        throw new BadRequestException(error.message);
       }
-      throw error;
+      throw new InternalServerErrorException();
     }
   }
 }
