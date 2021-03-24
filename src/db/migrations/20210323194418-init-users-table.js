@@ -10,12 +10,12 @@ module.exports = {
         defaultValue: Sequelize.UUIDV4,
       },
       username: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(20),
         allowNull: false,
         unique: true,
       },
       password: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(20),
         allowNull: false,
       },
       createdAt: {

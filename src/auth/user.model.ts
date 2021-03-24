@@ -4,6 +4,7 @@ import {
   AllowNull,
   Column,
   DataType,
+  Length,
   Table,
   Unique,
 } from 'sequelize-typescript';
@@ -21,11 +22,13 @@ export class User extends Model {
   id: string;
 
   @Unique({ name: 'username', msg: alreadyExists })
+  @Length({ min: 4, max: 20 })
   @AllowNull(false)
   @Column
   username: string;
 
   @AllowNull(false)
+  @Length({ min: 8, max: 20 })
   @Column
   password: string;
 
