@@ -21,9 +21,7 @@ export class Task extends Model {
   @Column
   status: TaskStatus;
 
-  static async findAllWithFilters(
-    filterDto: GetTasksFilterDto,
-  ): Promise<Task[]> {
+  static async findAllWithFilters(filterDto: GetTasksFilterDto): Promise<Task[]> {
     const { status, search } = filterDto;
     const where: WhereOptions = { [Op.or]: [] };
     if (status) {
@@ -31,10 +29,7 @@ export class Task extends Model {
     }
     if (search) {
       where[Op.or].push({
-        [Op.or]: [
-          { title: { [Op.substring]: search } },
-          { description: { [Op.substring]: search } },
-        ],
+        [Op.or]: [{ title: { [Op.substring]: search } }, { description: { [Op.substring]: search } }],
       });
     }
     const options: FindOptions = {};

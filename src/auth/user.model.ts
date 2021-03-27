@@ -1,16 +1,7 @@
 import { Model } from 'sequelize';
-import {
-  AllowNull,
-  Column,
-  DataType,
-  Length,
-  Table,
-  Unique,
-} from 'sequelize-typescript';
-import {
-  BadRequestException,
-  InternalServerErrorException,
-} from '@nestjs/common';
+import { AllowNull, Column, DataType, Length, Table, Unique } from 'sequelize-typescript';
+import { BadRequestException, InternalServerErrorException } from '@nestjs/common';
+
 import { alreadyExists } from '../constants/error-codes';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 
