@@ -1,7 +1,7 @@
 import { Model } from 'sequelize';
 import { AllowNull, Column, DataType, Length, Table, Unique } from 'sequelize-typescript';
 import { BadRequestException, InternalServerErrorException } from '@nestjs/common';
-
+import * as bcrypt from 'bcrypt';
 import { alreadyExists } from '../constants/error-codes';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 
@@ -21,18 +21,28 @@ export class User extends Model {
   username: string;
 
   @AllowNull(false)
-  @Length({ min: 8, max: 20 })
   @Column
   password: string;
 
+  @AllowNull(false)
+  @Column
+  salt: string;
+
   static async signUp(authCredentialsDto: AuthCredentialsDto): Promise<void> {
+    const { username, password } = authCredentialsDto;
     try {
-      await this.create(authCredentialsDto);
+      const salt = await bcrypt.genSalt();
+      const hashedPassword = await User.hashPassword(password, salt);
+      await this.create({ username, password: hashedPassword, salt });
     } catch (error) {
       if (error?.parent?.code === alreadyExists) {
         throw new BadRequestException(error.message);
       }
       throw new InternalServerErrorException();
     }
+  }
+
+  static async hashPassword(password: string, salt: string): Promise<string> {
+    return bcrypt.hash(password, salt);
   }
 }
