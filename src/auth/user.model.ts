@@ -1,4 +1,4 @@
-import { Model, FindOptions } from 'sequelize';
+import { Model } from 'sequelize';
 import { AllowNull, Column, DataType, Length, Table, Unique } from 'sequelize-typescript';
 import { BadRequestException, InternalServerErrorException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
@@ -42,12 +42,12 @@ export class User extends Model {
     }
   }
 
-  static async validateUserPassword(authCredentialsDto: AuthCredentialsDto): Promise<string> {
+  static async validateUserPassword(authCredentialsDto: AuthCredentialsDto): Promise<User> {
     const { username, password } = authCredentialsDto;
     const user = await this.findOne({ where: { username } });
 
     if (user && (await User.validatePassword(password, user.password, user.salt))) {
-      return user.username;
+      return user;
     }
 
     return null;

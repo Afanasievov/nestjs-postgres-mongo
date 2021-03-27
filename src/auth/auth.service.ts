@@ -11,11 +11,13 @@ export class AuthService {
     return this.userModel.signUp(authCredentialsDto);
   }
 
-  async signIn(authCredentialsDto: AuthCredentialsDto): Promise<void> {
-    const username = await this.userModel.validateUserPassword(authCredentialsDto);
+  async signIn(authCredentialsDto: AuthCredentialsDto): Promise<User> {
+    const user = await this.userModel.validateUserPassword(authCredentialsDto);
 
-    if (!username) {
+    if (!user) {
       throw new UnauthorizedException();
     }
+
+    return user;
   }
 }
