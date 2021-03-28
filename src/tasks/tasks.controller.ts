@@ -32,8 +32,8 @@ export class TasksController {
   }
 
   @Get('/:id')
-  async getTaskById(@Param('id') id: string): Promise<Task> {
-    return this.tasksService.getTaskById(id);
+  async getTaskById(@Param('id') id: string, @GetUser() user: User): Promise<Task> {
+    return this.tasksService.getTaskById(id, user);
   }
 
   @Post()
@@ -43,15 +43,16 @@ export class TasksController {
   }
 
   @Delete('/:id')
-  async deleteTask(@Param('id') id: string): Promise<boolean> {
-    return this.tasksService.deleteTask(id);
+  async deleteTask(@Param('id') id: string, @GetUser() user: User): Promise<boolean> {
+    return this.tasksService.deleteTask(id, user);
   }
 
   @Patch('/:id/status')
   async updateTaskStatus(
     @Param('id') id: string,
     @Body('status', TaskStatusValidationPipe) status: TaskStatus,
+    @GetUser() user: User,
   ): Promise<Task> {
-    return this.tasksService.updateTaskStatus(id, status);
+    return this.tasksService.updateTaskStatus(id, status, user);
   }
 }

@@ -14,11 +14,11 @@ export class TasksService {
     return this.taskModel.findAllWithFilters(filterDto, user);
   }
 
-  async getTaskById(id: string): Promise<Task> {
-    const found = await this.taskModel.findByPk(id);
+  async getTaskById(id: string, user: User): Promise<Task> {
+    const found = await this.taskModel.findOne({ where: { id, userId: user.id } });
 
     if (!found) {
-      throw new NotFoundException(`Task with ID '${id}' not found`);
+      throw new NotFoundException(`Task with ID '${id}' has not been found`);
     }
 
     return found;
@@ -29,19 +29,19 @@ export class TasksService {
     return created;
   }
 
-  async deleteTask(id: string): Promise<boolean> {
-    const removed = await this.taskModel.destroy({ where: { id } });
+  async deleteTask(id: string, user: User): Promise<boolean> {
+    const removed = await this.taskModel.destroy({ where: { id, userId: user.id } });
     return removed === 1;
   }
 
-  async updateTaskStatus(id: string, status: TaskStatus): Promise<Task> {
+  async updateTaskStatus(id: string, status: TaskStatus, user: User): Promise<Task> {
     const [count, tasks] = await this.taskModel.update(
       { status },
-      { where: { id }, fields: ['status'], returning: true },
+      { where: { id, userId: user.id }, fields: ['status'], returning: true },
     );
 
     if (!count) {
-      throw new BadRequestException(`Task with ID '${id}' not updated`);
+      throw new BadRequestException(`Task with ID '${id}' has not updated`);
     }
 
     return tasks[0];
