@@ -5,6 +5,7 @@ import { PassportModule } from '@nestjs/passport';
 import { User } from './user.model';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { JwtStrategy } from './jwt.strategy';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { AuthService } from './auth.service';
     SequelizeModule.forFeature([User]),
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, JwtStrategy],
+  exports: [JwtStrategy, PassportModule],
 })
 export class AuthModule {}
