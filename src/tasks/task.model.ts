@@ -1,4 +1,4 @@
-import { Op, FindOptions, WhereOptions } from 'sequelize';
+import { Op } from 'sequelize';
 import { Table, Model, Column, DataType, ForeignKey, BelongsTo } from 'sequelize-typescript';
 import { TaskStatus } from './task-status.enum';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
@@ -29,21 +29,24 @@ export class Task extends Model {
   @BelongsTo(() => User)
   user: User;
 
-  static async findAllWithFilters(filterDto: GetTasksFilterDto): Promise<Task[]> {
+  static async findAllWithFilters(filterDto: GetTasksFilterDto, user: User): Promise<Task[]> {
     const { status, search } = filterDto;
-    const where: WhereOptions = { [Op.or]: [] };
+
+    const where = { [Op.and]: [] };
+    where[Op.and].push({ userId: user.id });
+    const searchOptions = { [Op.and]: [] };
     if (status) {
-      where[Op.or].push({ status });
+      searchOptions[Op.and].push({ status });
     }
     if (search) {
-      where[Op.or].push({
+      searchOptions[Op.and].push({
         [Op.or]: [{ title: { [Op.substring]: search } }, { description: { [Op.substring]: search } }],
       });
     }
-    const options: FindOptions = {};
-    if (Object.keys(where[Op.or]).length) {
-      options.where = where;
+    if (searchOptions[Op.and].length) {
+      where[Op.and].push(searchOptions);
     }
-    return this.findAll(options);
+
+    return this.findAll({ where });
   }
 }

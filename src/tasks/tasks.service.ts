@@ -10,8 +10,8 @@ import { TaskStatus } from './task-status.enum';
 export class TasksService {
   constructor(@InjectModel(Task) private readonly taskModel: typeof Task) {}
 
-  async getTasks(filterDto: GetTasksFilterDto): Promise<Task[]> {
-    return this.taskModel.findAllWithFilters(filterDto);
+  async getTasks(filterDto: GetTasksFilterDto, user: User): Promise<Task[]> {
+    return this.taskModel.findAllWithFilters(filterDto, user);
   }
 
   async getTaskById(id: string): Promise<Task> {
