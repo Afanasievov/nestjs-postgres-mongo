@@ -17,6 +17,16 @@ module.exports = {
         defaultValue: 'OPEN',
         notNull: true,
       },
+      userId: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'Users',
+          key: 'id',
+          upUpdate: 'cascade',
+          onDelete: 'cascade',
+        },
+      },
     }),
 
   down: async (queryInterface) => queryInterface.dropTable('Tasks'),

@@ -1,10 +1,10 @@
-import { Model } from 'sequelize';
-import { AllowNull, Column, DataType, Length, Table, Unique } from 'sequelize-typescript';
+import { AllowNull, Column, DataType, HasMany, Length, Table, Unique, Model } from 'sequelize-typescript';
 import { BadRequestException, InternalServerErrorException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { alreadyExists } from '../constants/error-codes';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 import { UserApi } from './dto/user-api.dto';
+import { Task } from '../tasks/task.model';
 
 @Table
 export class User extends Model {
@@ -28,6 +28,9 @@ export class User extends Model {
   @AllowNull(false)
   @Column
   salt: string;
+
+  @HasMany(() => Task)
+  tasks: Task[];
 
   static async signUp(authCredentialsDto: AuthCredentialsDto): Promise<void> {
     const { username, password } = authCredentialsDto;

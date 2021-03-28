@@ -1,7 +1,8 @@
 import { Op, FindOptions, WhereOptions } from 'sequelize';
-import { Table, Model, Column, DataType } from 'sequelize-typescript';
+import { Table, Model, Column, DataType, ForeignKey, BelongsTo } from 'sequelize-typescript';
 import { TaskStatus } from './task-status.enum';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
+import { User } from '../auth/user.model';
 
 @Table({ timestamps: false })
 export class Task extends Model {
@@ -20,6 +21,13 @@ export class Task extends Model {
 
   @Column
   status: TaskStatus;
+
+  @ForeignKey(() => User)
+  @Column({ type: DataType.UUID })
+  userId: string;
+
+  @BelongsTo(() => User)
+  user: User;
 
   static async findAllWithFilters(filterDto: GetTasksFilterDto): Promise<Task[]> {
     const { status, search } = filterDto;
