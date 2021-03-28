@@ -5,6 +5,8 @@ import * as bcrypt from 'bcrypt';
 import { alreadyExists } from '../constants/error-codes';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 
+export type UserApi = Omit<User, 'password' | 'salt'>;
+
 @Table
 export class User extends Model {
   @Column({
@@ -42,12 +44,12 @@ export class User extends Model {
     }
   }
 
-  static async validateUserPassword(authCredentialsDto: AuthCredentialsDto): Promise<User> {
+  static async validateUserPassword(authCredentialsDto: AuthCredentialsDto): Promise<UserApi> {
     const { username, password } = authCredentialsDto;
     const user = await this.findOne({ where: { username } });
 
     if (user && (await User.validatePassword(password, user.password, user.salt))) {
-      return user;
+      return user.toUserApi();
     }
 
     return null;
@@ -60,5 +62,12 @@ export class User extends Model {
 
   static async hashPassword(password: string, salt: string): Promise<string> {
     return bcrypt.hash(password, salt);
+  }
+
+  toUserApi(): UserApi {
+    const userApi = this.toJSON() as User;
+    delete userApi.password;
+    delete userApi.salt;
+    return userApi;
   }
 }

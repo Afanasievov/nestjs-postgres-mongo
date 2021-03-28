@@ -1,5 +1,5 @@
 import { Body, Controller, Post, ValidationPipe } from '@nestjs/common';
-import { User } from './user.model';
+import { UserApi } from './user.model';
 import { AuthService } from './auth.service';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 
@@ -13,11 +13,7 @@ export class AuthController {
   }
 
   @Post('/signin')
-  async signIn(@Body() authCredentialsDto: AuthCredentialsDto): Promise<Omit<User, 'password' | 'salt'>> {
-    const user = await this.authService.signIn(authCredentialsDto);
-    const result = user.toJSON() as User;
-    delete result.password;
-    delete result.salt;
-    return result;
+  async signIn(@Body() authCredentialsDto: AuthCredentialsDto): Promise<UserApi> {
+    return this.authService.signIn(authCredentialsDto);
   }
 }

@@ -1,7 +1,7 @@
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { User } from './user.model';
+import { User, UserApi } from './user.model';
 
 @Injectable()
 export class AuthService {
@@ -11,7 +11,7 @@ export class AuthService {
     return this.userModel.signUp(authCredentialsDto);
   }
 
-  async signIn(authCredentialsDto: AuthCredentialsDto): Promise<User> {
+  async signIn(authCredentialsDto: AuthCredentialsDto): Promise<UserApi> {
     const user = await this.userModel.validateUserPassword(authCredentialsDto);
 
     if (!user) {
