@@ -1,11 +1,13 @@
-import { AuthCredentialsDto } from './dto/auth-credentials.dto';
-import { InjectModel } from '@nestjs/sequelize';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { User, UserApi } from './user.model';
+import { JwtService } from '@nestjs/jwt';
+import { InjectModel } from '@nestjs/sequelize';
+import { AuthCredentialsDto } from './dto/auth-credentials.dto';
+import { User } from './user.model';
+import { UserApi } from './dto/user-api.dto';
 
 @Injectable()
 export class AuthService {
-  constructor(@InjectModel(User) private readonly userModel: typeof User) {}
+  constructor(@InjectModel(User) private readonly userModel: typeof User, private readonly jwtService: JwtService) {}
 
   async signUp(authCredentialsDto: AuthCredentialsDto): Promise<void> {
     return this.userModel.signUp(authCredentialsDto);
@@ -17,6 +19,9 @@ export class AuthService {
     if (!user) {
       throw new UnauthorizedException();
     }
+
+    const payload = { username: user.username };
+    user.accessToken = this.jwtService.sign(payload);
 
     return user;
   }

@@ -4,8 +4,7 @@ import { BadRequestException, InternalServerErrorException } from '@nestjs/commo
 import * as bcrypt from 'bcrypt';
 import { alreadyExists } from '../constants/error-codes';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
-
-export type UserApi = Omit<User, 'password' | 'salt'>;
+import { UserApi } from './dto/user-api.dto';
 
 @Table
 export class User extends Model {
@@ -65,9 +64,16 @@ export class User extends Model {
   }
 
   toUserApi(): UserApi {
-    const userApi = this.toJSON() as User;
-    delete userApi.password;
-    delete userApi.salt;
+    const userApi: UserApi = {
+      id: this.id,
+      username: this.username,
+      createdAt: this.getDataValue('createdAt'),
+      updatedAt: this.getDataValue('updatedAt'),
+    };
+    const deletedAt = this.getDataValue('deletedAt');
+    if (deletedAt) {
+      userApi.deletedAt = deletedAt;
+    }
     return userApi;
   }
 }
