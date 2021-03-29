@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { User } from '../auth/user.model';
 import { Task } from './task.model';
@@ -8,6 +8,8 @@ import { TaskStatus } from './task-status.enum';
 
 @Injectable()
 export class TasksService {
+  private logger = new Logger('TaskService');
+
   constructor(@InjectModel(Task) private readonly taskModel: typeof Task) {}
 
   async getTasks(filterDto: GetTasksFilterDto, user: User): Promise<Task[]> {
@@ -25,8 +27,12 @@ export class TasksService {
   }
 
   async createTask(createTaskDto: CreateTaskDto, user: User): Promise<Task> {
-    const created = await this.taskModel.create({ ...createTaskDto, userId: user.id });
-    return created;
+    try {
+      const created = await this.taskModel.create({ ...createTaskDto, userId: user.id });
+      return created;
+    } catch (error) {
+      this.logger.error(`Failed to create a task for user '${user.username}'. Data ${createTaskDto}`, error.stack);
+    }
   }
 
   async deleteTask(id: string, user: User): Promise<boolean> {

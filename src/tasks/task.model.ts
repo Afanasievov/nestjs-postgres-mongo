@@ -1,11 +1,14 @@
 import { Op } from 'sequelize';
 import { Table, Model, Column, DataType, ForeignKey, BelongsTo } from 'sequelize-typescript';
+import { InternalServerErrorException, Logger } from '@nestjs/common';
 import { TaskStatus } from './task-status.enum';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 import { User } from '../auth/user.model';
 
 @Table({ timestamps: false })
 export class Task extends Model {
+  static logger = new Logger('TaskModel');
+
   @Column({
     type: DataType.UUID,
     primaryKey: true,
@@ -47,6 +50,14 @@ export class Task extends Model {
       where[Op.and].push(searchOptions);
     }
 
-    return this.findAll({ where });
+    try {
+      return this.findAll({ where });
+    } catch (error) {
+      this.logger.error(
+        `Failed to get tasks for user '${user.username}', DTO: ${JSON.stringify(filterDto)}`,
+        error.stack,
+      );
+      throw new InternalServerErrorException();
+    }
   }
 }
