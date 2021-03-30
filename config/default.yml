@@ -4,7 +4,7 @@ server:
 db:
   type: postgres
   port: 5432
-  database:task-management
+  database: task-management
 
 jwt:
   expiresIn: 1h
