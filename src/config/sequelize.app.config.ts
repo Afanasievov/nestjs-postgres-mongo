@@ -10,7 +10,7 @@ export const sequelizeConfig: SequelizeModuleOptions = {
   username: process.env.RDS_USERNAME || dbConfig.username,
   password: process.env.RDS_PASSWORD || dbConfig.password,
   database: process.env.RDS_DB_NAME || dbConfig.database,
-  models: ['/src/**/*.model.ts'],
+  models: ['/src/**/*.model.{js,ts}'],
   autoLoadModels: true,
   synchronize: process.env.ORM_SYNCHRONIZE || dbConfig.synchronize,
 };
