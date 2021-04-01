@@ -1,6 +1,6 @@
 import { AllowNull, Column, DataType, HasMany, Length, Table, Unique, Model } from 'sequelize-typescript';
 import { BadRequestException, InternalServerErrorException } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import { alreadyExists } from '../constants/error-codes';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 import { UserApi } from './dto/user-api.dto';
