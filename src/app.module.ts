@@ -8,6 +8,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { TasksModule } from './tasks/tasks.module';
 import { AuthModule } from './auth/auth.module';
 import { LessonModule } from './lesson/lesson.module';
+import { StudentModule } from './student/student.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { LessonModule } from './lesson/lesson.module';
     AuthModule,
     PassportModule,
     LessonModule,
+    StudentModule,
   ],
 })
 export class AppModule {}
