@@ -1,9 +1,9 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
-import { CreateLessonInput } from './lesson.input';
+import { CreateLessonInput } from './create-lesson.input';
 import { LessonService } from './lesson.service';
 import { LessonListType, LessonType } from './lesson.type';
 
-@Resolver()
+@Resolver((of) => LessonType)
 export class LessonResolver {
   constructor(private lessonService: LessonService) {}
 
