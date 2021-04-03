@@ -4,10 +4,16 @@ import { Repository } from 'typeorm';
 import { Lesson } from './lesson.entity';
 import { v4 as uuid } from 'uuid';
 import { CreateLessonInput } from './lesson.input';
+import { LessonListType } from './lesson.type';
 
 @Injectable()
 export class LessonService {
   constructor(@InjectRepository(Lesson) private lessonRepository: Repository<Lesson>) {}
+
+  async getLessonList(): Promise<LessonListType> {
+    const [items, totalCount] = await this.lessonRepository.findAndCount();
+    return { items, totalCount };
+  }
 
   async getLesson(id: string): Promise<Lesson> {
     return this.lessonRepository.findOne({ id });
