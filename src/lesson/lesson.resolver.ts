@@ -4,7 +4,7 @@ import { CreateLessonInput } from './create-lesson.input';
 import { StudentType } from '../student/student.type';
 import { LessonService } from './lesson.service';
 import { LessonListType, LessonType } from './lesson.type';
-import { AssignStudentToLessonInput } from './assign-students-to-lesson.input';
+import { AssignStudentsToLessonInput } from './assign-students-to-lesson.input';
 
 @Resolver((of) => LessonType)
 export class LessonResolver {
@@ -27,7 +27,7 @@ export class LessonResolver {
 
   @Mutation((returns) => LessonType)
   assignStudentsToLesson(
-    @Args('asssigntStudentsToLesson') assignStudentsToLessonInput: AssignStudentToLessonInput,
+    @Args('assignStudentsToLessonInput') assignStudentsToLessonInput: AssignStudentsToLessonInput,
   ): Promise<LessonType> {
     return this.lessonService.assignStudentsToLesson(assignStudentsToLessonInput);
   }
