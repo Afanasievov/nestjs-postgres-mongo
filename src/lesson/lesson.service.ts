@@ -5,6 +5,7 @@ import { Lesson } from './lesson.entity';
 import { v4 as uuid } from 'uuid';
 import { CreateLessonInput } from './create-lesson.input';
 import { LessonListType, LessonType } from './lesson.type';
+import { AssignStudentToLessonInput } from './assign-students-to-lesson.input';
 
 @Injectable()
 export class LessonService {
@@ -21,8 +22,16 @@ export class LessonService {
 
   async createLesson(createLessonInput: CreateLessonInput): Promise<LessonType> {
     const { name, startDate, endDate } = createLessonInput;
-    const lesson = this.lessonRepository.create({ id: uuid(), name, startDate, endDate });
+    const lesson = this.lessonRepository.create({ id: uuid(), name, startDate, endDate, students: [] });
 
+    return this.lessonRepository.save(lesson);
+  }
+
+  async assignStudentsToLesson(assignStudentsToLessonInput: AssignStudentToLessonInput): Promise<Lesson> {
+    const { lessonId, studentIds } = assignStudentsToLessonInput;
+    const lesson = await this.lessonRepository.findOne({ id: lessonId });
+    const students = [...lesson.students, ...studentIds].filter((id, i, arr) => arr.indexOf(id) === i);
+    lesson.students = students;
     return this.lessonRepository.save(lesson);
   }
 }
