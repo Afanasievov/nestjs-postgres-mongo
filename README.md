@@ -33,3 +33,5 @@ yarn start:dev
 # production mode
 yarn start:prod
 ```
+
+In development mode a GraphQL Playground is available on `localhost:3000/graphql`.
